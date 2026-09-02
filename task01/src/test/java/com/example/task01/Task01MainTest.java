@@ -1,7 +1,7 @@
 package com.example.task01;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -9,7 +9,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-public class Tests {
+public class Task01MainTest {
 
     private static final double DELTA = 1e-8;
 
@@ -65,21 +65,21 @@ public class Tests {
     @Test
     public void testCreatePoint() {
         Point p = createPoint(10, 20);
-        Assert.assertEquals("x не равен ожидаемому значению", 10, getValue(p, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", 20, getValue(p, "y"));
+        Assertions.assertEquals(10, getValue(p, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(20, getValue(p, "y"), "y не равен ожидаемому значению");
     }
 
     @Test
     public void testFlipMethod() {
         Method flip = getMethod("flip");
-        Assert.assertEquals("Метод flip должен возвращать void", void.class, flip.getReturnType());
-        Assert.assertEquals("Метод flip не должен принимать аргументы", 0, flip.getParameterCount());
-        Assert.assertFalse("Метод flip не должен быть static", Modifier.isStatic(flip.getModifiers()));
+        Assertions.assertEquals(void.class, flip.getReturnType(), "Метод flip должен возвращать void");
+        Assertions.assertEquals(0, flip.getParameterCount(), "Метод flip не должен принимать аргументы");
+        Assertions.assertFalse(Modifier.isStatic(flip.getModifiers()), "Метод flip не должен быть static");
 
         Point p = createPoint(10, 20);
         invoke(flip, p);
-        Assert.assertEquals("x не равен ожидаемому значению", -20, getValue(p, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", -10, getValue(p, "y"));
+        Assertions.assertEquals(-20, getValue(p, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(-10, getValue(p, "y"), "y не равен ожидаемому значению");
     }
 
     /**
@@ -90,8 +90,8 @@ public class Tests {
         Method flip = getMethod("flip");
         Point p = createPoint(5, -7);
         invoke(flip, p);
-        Assert.assertEquals("x не равен ожидаемому значению", 7, getValue(p, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", -5, getValue(p, "y"));
+        Assertions.assertEquals(7, getValue(p, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(-5, getValue(p, "y"), "y не равен ожидаемому значению");
     }
 
     /**
@@ -103,20 +103,20 @@ public class Tests {
         Point p = createPoint(3, 8);
         invoke(flip, p);
         invoke(flip, p);
-        Assert.assertEquals("x не равен ожидаемому значению", 3, getValue(p, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", 8, getValue(p, "y"));
+        Assertions.assertEquals(3, getValue(p, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(8, getValue(p, "y"), "y не равен ожидаемому значению");
     }
 
     @Test
     public void testDistanceMethod() {
         Method distance = getMethod("distance", Point.class);
-        Assert.assertEquals("Метод distance должен возвращать double", double.class, distance.getReturnType());
-        Assert.assertFalse("Метод distance не должен быть static", Modifier.isStatic(distance.getModifiers()));
+        Assertions.assertEquals(double.class, distance.getReturnType(), "Метод distance должен возвращать double");
+        Assertions.assertFalse(Modifier.isStatic(distance.getModifiers()), "Метод distance не должен быть static");
 
         Point p = createPoint(27, 31);
         Point p2 = createPoint(30, 27);
-        Assert.assertEquals("расстояние не равно ожидаемому значению", 5d, (double) invoke(distance, p, p2), DELTA);
-        Assert.assertEquals("расстояние не равно ожидаемому значению", 5d, (double) invoke(distance, p2, p), DELTA);
+        Assertions.assertEquals(5d, (double) invoke(distance, p, p2), DELTA, "расстояние не равно ожидаемому значению");
+        Assertions.assertEquals(5d, (double) invoke(distance, p2, p), DELTA, "расстояние не равно ожидаемому значению");
     }
 
     /**
@@ -127,7 +127,7 @@ public class Tests {
         Method distance = getMethod("distance", Point.class);
         Point p = createPoint(-3, -4);
         Point p2 = createPoint(3, 4);
-        Assert.assertEquals("расстояние не равно ожидаемому значению", 10d, (double) invoke(distance, p, p2), DELTA);
+        Assertions.assertEquals(10d, (double) invoke(distance, p, p2), DELTA, "расстояние не равно ожидаемому значению");
     }
 
     /**
@@ -138,28 +138,28 @@ public class Tests {
         Method distance = getMethod("distance", Point.class);
         Point p = createPoint(15, -40);
         Point p2 = createPoint(-25, 60);
-        Assert.assertEquals("расстояние до самой себя должно быть нулевым", 0d, (double) invoke(distance, p, p), DELTA);
+        Assertions.assertEquals(0d, (double) invoke(distance, p, p), DELTA, "расстояние до самой себя должно быть нулевым");
 
         invoke(distance, p, p2);
-        Assert.assertEquals("x не равен ожидаемому значению", 15, getValue(p, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", -40, getValue(p, "y"));
-        Assert.assertEquals("x не равен ожидаемому значению", -25, getValue(p2, "x"));
-        Assert.assertEquals("y не равен ожидаемому значению", 60, getValue(p2, "y"));
+        Assertions.assertEquals(15, getValue(p, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(-40, getValue(p, "y"), "y не равен ожидаемому значению");
+        Assertions.assertEquals(-25, getValue(p2, "x"), "x не равен ожидаемому значению");
+        Assertions.assertEquals(60, getValue(p2, "y"), "y не равен ожидаемому значению");
     }
 
     @Test
     public void testToString() {
         Method toString = getMethod("toString");
         int modifiers = toString.getModifiers();
-        Assert.assertTrue("Метод toString должен быть public", Modifier.isPublic(modifiers));
-        Assert.assertFalse("Метод toString не должен быть static", Modifier.isStatic(modifiers));
-        Assert.assertEquals("Метод toString должен возвращать String", String.class, toString.getReturnType());
+        Assertions.assertTrue(Modifier.isPublic(modifiers), "Метод toString должен быть public");
+        Assertions.assertFalse(Modifier.isStatic(modifiers), "Метод toString не должен быть static");
+        Assertions.assertEquals(String.class, toString.getReturnType(), "Метод toString должен возвращать String");
 
         Point p = createPoint(10, -20);
         Object result = invoke(toString, p);
-        Assert.assertNotNull("Метод toString не должен возвращать null", result);
+        Assertions.assertNotNull(result, "Метод toString не должен возвращать null");
         String value = (String) result;
-        Assert.assertTrue("Строковое представление точки должно содержать координату x", value.contains("10"));
-        Assert.assertTrue("Строковое представление точки должно содержать координату y", value.contains("-20"));
+        Assertions.assertTrue(value.contains("10"), "Строковое представление точки должно содержать координату x");
+        Assertions.assertTrue(value.contains("-20"), "Строковое представление точки должно содержать координату y");
     }
 }

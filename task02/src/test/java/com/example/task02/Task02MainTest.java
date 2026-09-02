@@ -1,7 +1,7 @@
 package com.example.task02;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Tests {
+public class Task02MainTest {
 
     private static final int HOURS = 0;
     private static final int MINUTES = 1;
@@ -78,7 +78,7 @@ public class Tests {
      */
     private static Field[] resolveFields() {
         List<Field> fields = getStateFields();
-        Assert.assertEquals("Класс должен хранить часы, минуты и секунды в трех отдельных полях", 3, fields.size());
+        Assertions.assertEquals(3, fields.size(), "Класс должен хранить часы, минуты и секунды в трех отдельных полях");
 
         Object timeSpan = createTimeSpan(3, 5, 7);
         Field[] resolved = new Field[3];
@@ -93,10 +93,10 @@ public class Tests {
             }
         }
         for (int i = 0; i < resolved.length; i++) {
-            Assert.assertNotNull(
-                    String.format("После создания TimeSpan(3, 5, 7) ни одно поле не хранит количество %s (%d). "
-                            + "Конструктор должен принимать часы, минуты и секунды именно в этом порядке", FIELD_NAMES[i], expected[i]),
-                    resolved[i]);
+            Assertions.assertNotNull(
+                resolved[i],
+                String.format("После создания TimeSpan(3, 5, 7) ни одно поле не хранит количество %s (%d). "
+                            + "Конструктор должен принимать часы, минуты и секунды именно в этом порядке", FIELD_NAMES[i], expected[i]));
         }
 
         return resolved;
@@ -122,15 +122,19 @@ public class Tests {
         Field[] fields = resolveFields();
         int[] expected = {hours, minutes, seconds};
         for (int i = 0; i < expected.length; i++) {
-            Assert.assertEquals(String.format("%s: количество %s не равно ожидаемому", message, FIELD_NAMES[i]),
-                    expected[i], readField(fields[i], timeSpan));
+            Assertions.assertEquals(
+                expected[i],
+                readField(fields[i], timeSpan),
+                String.format("%s: количество %s не равно ожидаемому", message, FIELD_NAMES[i]));
         }
     }
 
     @Test
     public void testFields() {
         for (Field f : getStateFields()) {
-            Assert.assertTrue(String.format("Поле %s должно быть private", f.getName()), Modifier.isPrivate(f.getModifiers()));
+            Assertions.assertTrue(
+                Modifier.isPrivate(f.getModifiers()),
+                String.format("Поле %s должно быть private", f.getName()));
         }
     }
 
@@ -168,7 +172,9 @@ public class Tests {
                     // метод не подошел, проверяем следующий
                 }
             }
-            Assert.assertTrue(String.format("Не найден public-метод, возвращающий количество %s", FIELD_NAMES[i]), found);
+            Assertions.assertTrue(
+                found,
+                String.format("Не найден public-метод, возвращающий количество %s", FIELD_NAMES[i]));
         }
     }
 
@@ -200,7 +206,9 @@ public class Tests {
                     break;
                 }
             }
-            Assert.assertTrue(String.format("Не найден public-метод, устанавливающий количество %s", FIELD_NAMES[i]), found);
+            Assertions.assertTrue(
+                found,
+                String.format("Не найден public-метод, устанавливающий количество %s", FIELD_NAMES[i]));
         }
     }
 
@@ -208,7 +216,7 @@ public class Tests {
     public void testAddMethod() {
         Class<?> clazz = getTestedClass();
         Method method = getMethod("add", clazz);
-        Assert.assertEquals("Метод add должен возвращать void", void.class, method.getReturnType());
+        Assertions.assertEquals(void.class, method.getReturnType(), "Метод add должен возвращать void");
 
         Object timeSpan = createTimeSpan(1, 20, 15);
         invoke(method, timeSpan, createTimeSpan(2, 30, 40));
@@ -249,7 +257,7 @@ public class Tests {
     public void testSubtractMethod() {
         Class<?> clazz = getTestedClass();
         Method method = getMethod("subtract", clazz);
-        Assert.assertEquals("Метод subtract должен возвращать void", void.class, method.getReturnType());
+        Assertions.assertEquals(void.class, method.getReturnType(), "Метод subtract должен возвращать void");
 
         Object timeSpan = createTimeSpan(3, 50, 55);
         invoke(method, timeSpan, createTimeSpan(2, 30, 40));
@@ -290,16 +298,16 @@ public class Tests {
     public void testToString() {
         Method toString = getMethod("toString");
         int modifiers = toString.getModifiers();
-        Assert.assertTrue("Метод toString должен быть public", Modifier.isPublic(modifiers));
-        Assert.assertFalse("Метод toString не должен быть static", Modifier.isStatic(modifiers));
-        Assert.assertEquals("Метод toString должен возвращать String", String.class, toString.getReturnType());
+        Assertions.assertTrue(Modifier.isPublic(modifiers), "Метод toString должен быть public");
+        Assertions.assertFalse(Modifier.isStatic(modifiers), "Метод toString не должен быть static");
+        Assertions.assertEquals(String.class, toString.getReturnType(), "Метод toString должен возвращать String");
 
         Object result = createTimeSpan(3, 5, 7).toString();
-        Assert.assertNotNull("Метод toString не должен возвращать null", result);
+        Assertions.assertNotNull(result, "Метод toString не должен возвращать null");
         String value = (String) result;
-        Assert.assertTrue("Строковое представление интервала должно содержать количество часов", value.contains("3"));
-        Assert.assertTrue("Строковое представление интервала должно содержать количество минут", value.contains("5"));
-        Assert.assertTrue("Строковое представление интервала должно содержать количество секунд", value.contains("7"));
+        Assertions.assertTrue(value.contains("3"), "Строковое представление интервала должно содержать количество часов");
+        Assertions.assertTrue(value.contains("5"), "Строковое представление интервала должно содержать количество минут");
+        Assertions.assertTrue(value.contains("7"), "Строковое представление интервала должно содержать количество секунд");
     }
 
     private static Class<?> wrap(Class<?> type) {

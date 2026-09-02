@@ -1,7 +1,7 @@
 package com.example.task05;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Tests {
+public class Task05MainTest {
 
     /**
      * Тестирование расстояния от точки до точки
@@ -75,7 +75,9 @@ public class Tests {
         for (Field field : fields) {
             boolean isPrivate = Modifier.isPrivate(field.getModifiers());
             boolean isFinal = Modifier.isFinal(field.getModifiers());
-            Assert.assertFalse(MessageFormat.format("Поле {0} недостаточно инкапсулировано", field.getName()), !isPrivate && !isFinal);
+            Assertions.assertFalse(
+                !isPrivate && !isFinal,
+                MessageFormat.format("Поле {0} недостаточно инкапсулировано", field.getName()));
         }
     }
 
@@ -188,7 +190,7 @@ public class Tests {
         line.setPoints(points);
         final double expected = line.getLength();
         points[1] = new Point(10, 20);
-        Assert.assertTrue("Модификация массива точек приводит к модификации ломаной линии", Math.abs(expected - line.getLength()) < 1e-8);
+        Assertions.assertTrue(Math.abs(expected - line.getLength()) < 1e-8, "Модификация массива точек приводит к модификации ломаной линии");
     }
 
     /**
@@ -208,7 +210,7 @@ public class Tests {
         line.setPoints(points);
         final double expected = line.getLength();
         movePoint(points[0]);
-        Assert.assertTrue("Модификация точки приводит к модификации ломаной линии", Math.abs(expected - line.getLength()) < 1e-8);
+        Assertions.assertTrue(Math.abs(expected - line.getLength()) < 1e-8, "Модификация точки приводит к модификации ломаной линии");
     }
 
     /**
@@ -230,7 +232,7 @@ public class Tests {
         }
         final double expected = line.getLength();
         movePoint(points[0]);
-        Assert.assertTrue("Модификация точки приводит к модификации ломаной линии", Math.abs(expected - line.getLength()) < 1e-8);
+        Assertions.assertTrue(Math.abs(expected - line.getLength()) < 1e-8, "Модификация точки приводит к модификации ломаной линии");
     }
 
     private static List<Field> getPointFields() {
@@ -253,6 +255,8 @@ public class Tests {
     }
 
     private void testEquals(double value1, double value2) {
-        Assert.assertTrue(MessageFormat.format("Значения {0} и {1} не совпадают", value1, value2), Math.abs(value1 - value2) < 1e-8);
+        Assertions.assertTrue(
+            Math.abs(value1 - value2) < 1e-8,
+            MessageFormat.format("Значения {0} и {1} не совпадают", value1, value2));
     }
 }
